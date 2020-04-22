@@ -18,7 +18,7 @@ void setup()
   Serial.begin(9600);
   
   // Sending SDATAC to stop reading contionus data, so we can send other command
-  adc.sendCommand(SDATAC);
+  adc.sendCommand(ADS1256_CMD_SDATAC);
   Serial.println("SDATAC command sent");
   
 /*  Single Ended Mode
@@ -34,7 +34,7 @@ void setup()
     adc.waitDRDY();
     adc.setChannel(i);
     Serial.print("Current Channel: ");
-    Serial.println(adc.readRegister(MUX),HEX); // Read the multiplex register to see the current active channel
+    Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
     //Should it be? adc.readCurrentChannel()
   }
 
@@ -52,7 +52,7 @@ void setup()
     adc.waitDRDY();
     adc.setChannel(i,i+1);
     Serial.print("Current Channel: ");
-    Serial.println(adc.readRegister(MUX),HEX); // Read the multiplex register to see the current active channel
+    Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
     //Should it be? adc.readCurrentChannel()
   }
 
