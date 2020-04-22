@@ -42,7 +42,7 @@ void ADS1256::writeRegister(unsigned char reg, unsigned char wdata) {
   SPI.transfer(ADS1256_CMD_WREG | reg);
   SPI.transfer(0);
   SPI.transfer(wdata);
-  //__builtin_avr_delay_cycles(8);  // t11 delay (4*tCLKIN) after ADS1256_CMD_WREG command,   // esp compiles? 
+  //__builtin_avr_delay_cycles(8);  // t11 delay (4*tCLKIN) after ADS1256_CMD_WREG command,   // maybe add a delay() ? 
                                   // 16Mhz avr clock is approximately twice
                                   // faster that 7.68 Mhz ADS1256 master clock
   CSOFF();
@@ -54,11 +54,11 @@ unsigned char ADS1256::readRegister(unsigned char reg) {
   CSON();
   SPI.transfer(ADS1256_CMD_RREG | reg);
   SPI.transfer(0);
-  //__builtin_avr_delay_cycles(200);  // t6 delay (50*tCLKIN), 16Mhz avr clock is
+  //__builtin_avr_delay_cycles(200);  // t6 delay (50*tCLKIN), 16Mhz avr clock is    // maybe add a delay() ? 
                                     // approximately twice faster that 7.68 Mhz
                                     // ADS1256 master clock
   readValue = SPI.transfer(0);
-  //__builtin_avr_delay_cycles(8);  // t11 delay
+  //__builtin_avr_delay_cycles(8);  // t11 delay   // maybe add a delay() ? 
   CSOFF();
 
   return readValue;
@@ -68,7 +68,7 @@ void ADS1256::sendCommand(unsigned char reg) {
   CSON();
   waitDRDY();
   SPI.transfer(reg);
-  //__builtin_avr_delay_cycles(8);  // t11
+  //__builtin_avr_delay_cycles(8);  // t11 // maybe add a delay() ? 
   CSOFF();
 }
 
@@ -78,7 +78,7 @@ void ADS1256::readTest() {
   unsigned char _highByte, _midByte, _lowByte;
   CSON();
   SPI.transfer(ADS1256_CMD_RDATA);
-  //__builtin_avr_delay_cycles(200);  // t6 delay
+  //__builtin_avr_delay_cycles(200);  // t6 delay   // maybe add a delay() ? 
 
   _highByte = SPI.transfer(ADS1256_CMD_WAKEUP);
   _midByte = SPI.transfer(ADS1256_CMD_WAKEUP);
@@ -90,7 +90,7 @@ void ADS1256::readTest() {
 float ADS1256::readCurrentChannel() {
   CSON();
   SPI.transfer(ADS1256_CMD_RDATA);
-  //__builtin_avr_delay_cycles(200);  // t6 delay
+  //__builtin_avr_delay_cycles(200);  // t6 delay           // maybe add a delay() ? 
   float adsCode = read_float32();
   CSOFF();
   return ((adsCode / 0x7FFFFF) * ((2 * _VREF) / (float)_pga)) *
@@ -100,7 +100,7 @@ float ADS1256::readCurrentChannel() {
 float ADS1256::readCurrentChannelRaw() {
   CSON();
   SPI.transfer(ADS1256_CMD_RDATA);
-  //__builtin_avr_delay_cycles(200);  // t6 delay
+  //__builtin_avr_delay_cycles(200);  // t6 delay           // maybe add a delay() ? 
   float adsCode = read_float32();
   CSOFF();
   return ((adsCode / 0x7FFFFF) * _conversionFactor);
