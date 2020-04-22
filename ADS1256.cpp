@@ -10,15 +10,19 @@
 
 ADS1256::ADS1256(float clockspdMhz, float vref, bool useResetPin) {
   // Set DRDY as input
-  DDR_DRDY &= ~(1 << PINDEX_DRDY);
+  //DDR_DRDY &= ~(1 << PINDEX_DRDY);   // AVR
+  pinMode(pinDRDY, INPUT);      // using arduino functions for more compatibility
   // Set CS as output
-  DDR_CS |= (1 << PINDEX_CS);
-
+  //DDR_CS |= (1 << PINDEX_CS);
+  pinMode(pinCS, OUTPUT);
+  
   if (useResetPin) {
     // set RESETPIN as output
-    DDR_RESET |= (1 << PINDEX_RESET);
+    //DDR_RESET |= (1 << PINDEX_RESET);
+    pinMode(pinRST, OUTPUT );
     // pull RESETPIN high
-    PORT_RESET |= (1 << PINDEX_RESET);
+    //PORT_RESET |= (1 << PINDEX_RESET);
+    pinMode(pinRST, HIGH);
   }
 
   // Voltage Reference
@@ -35,10 +39,10 @@ ADS1256::ADS1256(float clockspdMhz, float vref, bool useResetPin) {
 
 void ADS1256::writeRegister(unsigned char reg, unsigned char wdata) {
   CSON();
-  SPI.transfer(WREG | reg);
+  SPI.transfer(ADS1256_CMD_WREG | reg);
   SPI.transfer(0);
   SPI.transfer(wdata);
-  __builtin_avr_delay_cycles(8);  // t11 delay (4*tCLKIN) after WREG command,
+  //__builtin_avr_delay_cycles(8);  // t11 delay (4*tCLKIN) after ADS1256_CMD_WREG command,   // esp compiles? 
                                   // 16Mhz avr clock is approximately twice
                                   // faster that 7.68 Mhz ADS1256 master clock
   CSOFF();
@@ -48,13 +52,13 @@ unsigned char ADS1256::readRegister(unsigned char reg) {
   unsigned char readValue;
 
   CSON();
-  SPI.transfer(RREG | reg);
+  SPI.transfer(ADS1256_CMD_RREG | reg);
   SPI.transfer(0);
-  __builtin_avr_delay_cycles(200);  // t6 delay (50*tCLKIN), 16Mhz avr clock is
+  //__builtin_avr_delay_cycles(200);  // t6 delay (50*tCLKIN), 16Mhz avr clock is
                                     // approximately twice faster that 7.68 Mhz
                                     // ADS1256 master clock
   readValue = SPI.transfer(0);
-  __builtin_avr_delay_cycles(8);  // t11 delay
+  //__builtin_avr_delay_cycles(8);  // t11 delay
   CSOFF();
 
   return readValue;
@@ -64,7 +68,7 @@ void ADS1256::sendCommand(unsigned char reg) {
   CSON();
   waitDRDY();
   SPI.transfer(reg);
-  __builtin_avr_delay_cycles(8);  // t11
+  //__builtin_avr_delay_cycles(8);  // t11
   CSOFF();
 }
 
@@ -73,20 +77,20 @@ void ADS1256::setConversionFactor(float val) { _conversionFactor = val; }
 void ADS1256::readTest() {
   unsigned char _highByte, _midByte, _lowByte;
   CSON();
-  SPI.transfer(RDATA);
-  __builtin_avr_delay_cycles(200);  // t6 delay
+  SPI.transfer(ADS1256_CMD_RDATA);
+  //__builtin_avr_delay_cycles(200);  // t6 delay
 
-  _highByte = SPI.transfer(WAKEUP);
-  _midByte = SPI.transfer(WAKEUP);
-  _lowByte = SPI.transfer(WAKEUP);
+  _highByte = SPI.transfer(ADS1256_CMD_WAKEUP);
+  _midByte = SPI.transfer(ADS1256_CMD_WAKEUP);
+  _lowByte = SPI.transfer(ADS1256_CMD_WAKEUP);
 
   CSOFF();
 }
 
 float ADS1256::readCurrentChannel() {
   CSON();
-  SPI.transfer(RDATA);
-  __builtin_avr_delay_cycles(200);  // t6 delay
+  SPI.transfer(ADS1256_CMD_RDATA);
+  //__builtin_avr_delay_cycles(200);  // t6 delay
   float adsCode = read_float32();
   CSOFF();
   return ((adsCode / 0x7FFFFF) * ((2 * _VREF) / (float)_pga)) *
@@ -95,28 +99,28 @@ float ADS1256::readCurrentChannel() {
 
 float ADS1256::readCurrentChannelRaw() {
   CSON();
-  SPI.transfer(RDATA);
-  __builtin_avr_delay_cycles(200);  // t6 delay
+  SPI.transfer(ADS1256_CMD_RDATA);
+  //__builtin_avr_delay_cycles(200);  // t6 delay
   float adsCode = read_float32();
   CSOFF();
-  return ((adsCode / 0x7FFFFF) * _conversionFactor;
+  return ((adsCode / 0x7FFFFF) * _conversionFactor);
 }
 
-// Call this ONLY after RDATA command
+// Call this ONLY after ADS1256_CMD_RDATA command
 unsigned long ADS1256::read_uint24() {
   unsigned char _highByte, _midByte, _lowByte;
   unsigned long value;
 
-  _highByte = SPI.transfer(WAKEUP);
-  _midByte = SPI.transfer(WAKEUP);
-  _lowByte = SPI.transfer(WAKEUP);
+  _highByte = SPI.transfer(ADS1256_CMD_WAKEUP);
+  _midByte = SPI.transfer(ADS1256_CMD_WAKEUP);
+  _lowByte = SPI.transfer(ADS1256_CMD_WAKEUP);
 
   // Combine all 3-bytes to 24-bit data using byte shifting.
   value = ((long)_highByte << 16) + ((long)_midByte << 8) + ((long)_lowByte);
   return value;
 }
 
-// Call this ONLY after RDATA command
+// Call this ONLY after ADS1256_CMD_RDATA command
 long ADS1256::read_int32() {
   long value = read_uint24();
 
@@ -127,7 +131,7 @@ long ADS1256::read_int32() {
   return value;
 }
 
-// Call this ONLY after RDATA command
+// Call this ONLY after ADS1256_CMD_RDATA command
 float ADS1256::read_float32() {
   long value = read_int32();
   return (float)value;
@@ -205,44 +209,46 @@ void ADS1256::setChannel(byte AIN_P, byte AIN_N) {
   MUX_CHANNEL = MUXP | MUXN;
 
   CSON();
-  writeRegister(MUX, MUX_CHANNEL);
-  sendCommand(SYNC);
-  sendCommand(WAKEUP);
+  writeRegister(ADS1256_RADD_MUX, MUX_CHANNEL);
+  sendCommand(ADS1256_CMD_SYNC);
+  sendCommand(ADS1256_CMD_WAKEUP);
   CSOFF();
 }
 
 void ADS1256::begin(unsigned char drate, unsigned char gain, bool buffenable) {
   _pga = 1 << gain;
   sendCommand(
-      SDATAC);  // send out SDATAC command to stop continous reading mode.
-  writeRegister(DRATE, drate);  // write data rate register
+      ADS1256_CMD_SDATAC);  // send out ADS1256_CMD_SDATAC command to stop continous reading mode.
+  writeRegister(ADS1256_RADD_DRATE, drate);  // write data rate register
   uint8_t bytemask = B00000111;
-  uint8_t adcon = readRegister(ADCON);
+  uint8_t adcon = readRegister(ADS1256_RADD_ADCON);
   uint8_t byte2send = (adcon & ~bytemask) | gain;
-  writeRegister(ADCON, byte2send);
+  writeRegister(ADS1256_RADD_ADCON, byte2send);
   if (buffenable) {
-    uint8_t status = readRegister(STATUS);
+    uint8_t status = readRegister(ADS1256_RADD_STATUS);
     bitSet(status, 1);
-    writeRegister(STATUS, status);
+    writeRegister(ADS1256_RADD_STATUS, status);
   }
-  sendCommand(SELFCAL);  // perform self calibration
+  sendCommand(ADS1256_CMD_SELFCAL);  // perform self calibration
   waitDRDY();
   ;  // wait ADS1256 to settle after self calibration
 }
 
 void ADS1256::CSON() {
-  PORT_CS &= ~(1 << PINDEX_CS);
+  //PORT_CS &= ~(1 << PINDEX_CS);
+  digitalWrite(pinCS, LOW);
 }  // digitalWrite(_CS, LOW); }
 
 void ADS1256::CSOFF() {
-  PORT_CS |= (1 << PINDEX_CS);
+  digitalWrite(pinCS, HIGH);
+  //PORT_CS |= (1 << PINDEX_CS);
 }  // digitalWrite(_CS, HIGH); }
 
 void ADS1256::waitDRDY() {
-  while (PIN_DRDY & (1 << PINDEX_DRDY))
-    ;
+  //while (PIN_DRDY & (1 << PINDEX_DRDY));
+  while (digitalRead(pinDRDY));
 }
 
 boolean ADS1256::isDRDY() {
-  return ~(PIN_DRDY & (1 << PINDEX_DRDY));
+  return !digitalRead(pinDRDY);
 }	
