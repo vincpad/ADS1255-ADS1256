@@ -99,7 +99,7 @@ long ADS1256::readCurrentChannelRaw() {
   __builtin_avr_delay_cycles(200);  // t6 delay
   long adsCode = read_int32();
   CSOFF();
-  return adsCode  ;
+  return adsCode ;
 }
 
 void ADS1256::readRawBytes(unsigned char rData[]) {
