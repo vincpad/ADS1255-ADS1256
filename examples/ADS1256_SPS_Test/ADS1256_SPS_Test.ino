@@ -15,13 +15,13 @@ float vRef = 2.5; // voltage reference
 // Initialize ADS1256 object
 ADS1256 adc(clockMHZ,vRef,false); // RESETPIN is permanently tied to 3.3v
 
-float sensor1;
+float sensor1, sps;
 long lastTime, currentTime, elapsedTime; 
 int counter; 
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(250000);
   
   Serial.println("Starting ADC");
 
@@ -54,29 +54,32 @@ void setup()
   //ADS1256_GAIN_16 
   //ADS1256_GAIN_32 
   //ADS1256_GAIN_64 
-  adc.begin(ADS1256_DRATE_1000SPS,ADS1256_GAIN_1,false); 
+  adc.begin(ADS1256_DRATE_100SPS,ADS1256_GAIN_1,false); 
 
   Serial.println("ADC Started");
   
-   // Set MUX Register to AINO so it start doing the ADC conversion
-  adc.setChannel(0);
+   // Set MUX Register to AINO-AIN1 so it start doing the ADC conversion
+  adc.setChannel(0,1);
 }
 
 void loop()
 { 
   currentTime = millis();
   elapsedTime = currentTime - lastTime; 
-  if (elapsedTime >= 1000){
-    Serial.print("elapsed: ");
-    Serial.print(elapsedTime);
-    Serial.print(" SPS: ");
-    Serial.println(counter*1.0/elapsedTime*1000);
+  if (elapsedTime >= 1000){ 
+    sps = counter*1.0/elapsedTime*1000;
     lastTime = currentTime; 
     counter=0;    
   }  
   adc.waitDRDY(); // wait for DRDY to go low before changing multiplexer register 
   sensor1 = adc.readCurrentChannel(); // DOUT arriving here is from MUX AIN0 and AIN8 (GND)
   //print the result.
-  //Serial.println(sensor1,10);
   counter++; 
+  //Serial.print("C: ");
+  //Serial.print(counter);
+  Serial.print(" SR: ");
+  Serial.print(sps);  
+  Serial.print(" V: ");
+  Serial.println(sensor1,2);   // print with 2 decimals
+  
 }

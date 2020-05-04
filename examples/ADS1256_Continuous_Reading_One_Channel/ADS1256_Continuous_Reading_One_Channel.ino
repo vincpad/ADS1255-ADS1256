@@ -18,7 +18,7 @@ float sensor1;
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(250000);
   
   Serial.println("Starting ADC");
 
@@ -56,7 +56,7 @@ void setup()
   Serial.println("ADC Started");
   
    // Set MUX Register to AINO so it start doing the ADC conversion
-  adc.setChannel(0);
+  adc.setChannel(0,1);
 }
 
 void loop()
