@@ -142,7 +142,7 @@ class ADS1256 {
   unsigned char readRegister(unsigned char reg);
   void sendCommand(unsigned char cmd);
   float readCurrentChannel();
-  float readCurrentChannelRaw();
+  long readCurrentChannelRaw();
   void setConversionFactor(float val);
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);

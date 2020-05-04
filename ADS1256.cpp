@@ -92,19 +92,20 @@ float ADS1256::readCurrentChannel() {
   return ((adsCode / 0x7FFFFF) * ((2 * _VREF) / (float)_pga)) * _conversionFactor;
 }
 
-float ADS1256::readCurrentChannelRaw() {
+long ADS1256::readCurrentChannelRaw() {
   CSON();
   SPI.transfer(RDATA);
   __builtin_avr_delay_cycles(200);  // t6 delay
-  float adsCode = read_float32();
+  long adsCode = read_int32();
   CSOFF();
-  return ((adsCode / 0x7FFFFF) * _conversionFactor);
+  return adsCode  ;
 }
 
+// The ADS1255/6 output 24 bits of data in Binary Two’s Complement format.
 // Call this ONLY after RDATA command
-unsigned long ADS1256::read_uint24() {
-  unsigned char _highByte, _midByte, _lowByte;
-  unsigned long value;
+unsigned long ADS1256::read_uint24() {  
+  unsigned char _highByte, _midByte, _lowByte;  // unsigned 8 bit
+  unsigned long value;                          // unsigned 32 bit
 
   _highByte = SPI.transfer(WAKEUP);
   _midByte = SPI.transfer(WAKEUP);
@@ -119,7 +120,7 @@ unsigned long ADS1256::read_uint24() {
 long ADS1256::read_int32() {
   long value = read_uint24();
 
-  if (value & 0x00800000) {
+  if (value & 0x00800000) {  // if it's negative in 24 bit two's complement add 0xff000000 to get it signed
     value |= 0xff000000;
   }
 
