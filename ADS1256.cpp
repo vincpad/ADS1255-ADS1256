@@ -224,21 +224,29 @@ void ADS1256::setChannel(byte AIN_P, byte AIN_N) {
 
 void ADS1256::begin(unsigned char drate, unsigned char gain, bool buffenable) {
   _pga = 1 << gain;
-  sendCommand(
-      ADS1256_CMD_SDATAC);  // send out ADS1256_CMD_SDATAC command to stop continous reading mode.
-  writeRegister(ADS1256_RADD_DRATE, drate);  // write data rate register
+  sendCommand(ADS1256_CMD_SDATAC);  // send out ADS1256_CMD_SDATAC command to stop continous reading mode.
+  writeRegister(ADS1256_RADD_DRATE, drate);  // write data rate register   
   uint8_t bytemask = B00000111;
   uint8_t adcon = readRegister(ADS1256_RADD_ADCON);
   uint8_t byte2send = (adcon & ~bytemask) | gain;
   writeRegister(ADS1256_RADD_ADCON, byte2send);
-  if (buffenable) {
-    uint8_t status = readRegister(ADS1256_RADD_STATUS);
-    bitSet(status, 1);
+  if (buffenable) {  
+    uint8_t status = readRegister(ADS1256_RADD_STATUS);   
+    bitSet(status, 1); 
     writeRegister(ADS1256_RADD_STATUS, status);
   }
   sendCommand(ADS1256_CMD_SELFCAL);  // perform self calibration
+  
   waitDRDY();
   ;  // wait ADS1256 to settle after self calibration
+}
+
+uint8_t ADS1256::begin() {
+  sendCommand(ADS1256_CMD_SDATAC);  // send out ADS1256_CMD_SDATAC command to stop continous reading mode.
+  uint8_t status = readRegister(ADS1256_RADD_STATUS);      
+  sendCommand(ADS1256_CMD_SELFCAL);  // perform self calibration  
+  waitDRDY();
+  return status;  // wait ADS1256 to settle after self calibration
 }
 
 void ADS1256::CSON() {
