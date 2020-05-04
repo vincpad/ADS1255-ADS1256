@@ -143,6 +143,7 @@ class ADS1256 {
   void sendCommand(unsigned char cmd);
   float readCurrentChannel();
   long readCurrentChannelRaw();
+  void readRawBytes(unsigned char rData[]);
   void setConversionFactor(float val);
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);
@@ -159,6 +160,7 @@ class ADS1256 {
   long read_int32();
   float read_float32();
   byte _pga;
+  float _tCLKIN;
   float _VREF;
   float _conversionFactor;
 };

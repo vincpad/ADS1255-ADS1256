@@ -13,7 +13,8 @@ ADS1256::ADS1256(float clockspdMhz, float vref, bool useResetPin) {
   DDR_DRDY &= ~(1 << PINDEX_DRDY);
   // Set CS as output
   DDR_CS |= (1 << PINDEX_CS);
-
+  //_tCLKIN is around 0.13 us for a 7.68MHz clock 
+  _tCLKIN = 1/clockspdMhz;     
   if (useResetPin) {
     // set RESETPIN as output
     DDR_RESET |= (1 << PINDEX_RESET);
@@ -100,6 +101,17 @@ long ADS1256::readCurrentChannelRaw() {
   CSOFF();
   return adsCode  ;
 }
+
+void ADS1256::readRawBytes(unsigned char rData[]) {
+  CSON();
+  SPI.transfer(RDATA);
+  __builtin_avr_delay_cycles(200);  // t6 delay
+  rData[2] = SPI.transfer(WAKEUP);
+  rData[1] = SPI.transfer(WAKEUP);
+  rData[0] = SPI.transfer(WAKEUP);
+  CSOFF();    
+}
+
 
 // The ADS1255/6 output 24 bits of data in Binary Two’s Complement format.
 // Call this ONLY after RDATA command
