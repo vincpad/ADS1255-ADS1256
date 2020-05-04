@@ -16,7 +16,7 @@ ADS1256 adc(7.68, 2.5, true ); // clockSpeed in Mhz,  VREF in volt, if use RESET
 void setup()
 {
   Serial.begin(9600);
-  
+  adc.begin(ADS1256_DRATE_15SPS,ADS1256_GAIN_1,false);
   // Sending SDATAC to stop reading contionus data, so we can send other command
   adc.sendCommand(SDATAC);
   Serial.println("SDATAC command sent");
