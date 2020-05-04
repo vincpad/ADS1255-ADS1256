@@ -99,7 +99,7 @@ float ADS1256::readCurrentChannelRaw() {
   __builtin_avr_delay_cycles(200);  // t6 delay
   float adsCode = read_float32();
   CSOFF();
-  return ((adsCode / 0x7FFFFF) * _conversionFactor;
+  return ((adsCode / 0x7FFFFF) * _conversionFactor);
 }
 
 // Call this ONLY after RDATA command
