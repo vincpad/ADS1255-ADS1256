@@ -24,9 +24,9 @@
 	#define PINDEX_RESET PB0
 	#define DDR_RESET DDRB
 
-    #define pinDRDY D9
-    #define pinRST  D8
-    #define pinCS   D10 
+    #define pinDRDY 9
+    #define pinRST  8
+    #define pinCS   10 
     
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	// Define PORT
@@ -45,9 +45,9 @@
 	#define PINDEX_RESET PL1
 	#define DDR_RESET DDRL
 
-    #define pinDRDY D49
-    #define pinRST  D48
-    #define pinCS   D53 
+    #define pinDRDY 49
+    #define pinRST  48
+    #define pinCS   53 
 	
  // Contributions are welcome   
 #elif   defined(ARDUINO_ARCH_ESP8266)
