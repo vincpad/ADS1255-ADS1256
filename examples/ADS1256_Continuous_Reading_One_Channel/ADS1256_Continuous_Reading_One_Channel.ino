@@ -1,20 +1,9 @@
 // Arudino Sample Code to use ADS1256 library
-
-// Efficient Input Cycling
-// Reads 4 differential channels using effiecient input cycling
-/* Sensor reading:
-  sensor1 = differential input connected on AIN0 - AIN1
-  sensor2 = differential input connected on AIN2 - AIN3
-  sensor3 = differential input connected on AIN4 - AIN5
-  sensor4 = differential input connected on AIN6 - AIN7
-*/
-// to learn further, read on datasheet page 21, figure 19 : Cycling the ADS1256 Input Multiplexer
-
 // http://www.ti.com/lit/ds/symlink/ads1256.pdf
 
-// Written by Adien Akhmad, August 2015
-// Modfified  Jan 2019 by Axel Sepulveda for ATMEGA328
+// Reads 1 channel continuously
 
+// Written by Axel Sepulveda, May 2020
 
 #include <ADS1256.h>
 #include <SPI.h>
