@@ -6,6 +6,11 @@ http://www.ti.com/lit/ds/symlink/ads1256.pdf
 # To Do and wish List
 - Add ESP8266/32 support
 
+# Branches list
+- Master: keeps sync and push to https://github.com/adienakhmad/ADS1256
+- New examples: developing new examples code
+- Dev: Development and testing
+- DevESP: Add ESP8266 and ESP32 support
 
 # Installation
 As any arduino library (download repo, import library)
