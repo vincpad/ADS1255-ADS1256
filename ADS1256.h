@@ -47,10 +47,10 @@
 	// Contributions are welcome
 #else 
 	// Contributions are welcome
-	#error "Oops! Your board architecture is not supported yet'"
+	//#error "Oops! Your board architecture is not supported yet'"
 #endif
 // ADS1256 Register
-#define STATUS 0x00
+#define _STATUS 0x00
 #define MUX 0x01
 #define ADCON 0x02
 #define DRATE 0x03
@@ -63,7 +63,7 @@
 #define FSC2 0x0A
 
 // ADS1256 Command
-#define WAKEUP 0x00
+#define _WAKEUP 0x00
 #define RDATA 0x01
 #define RDATAC 0x03
 #define SDATAC 0x0f
@@ -137,12 +137,12 @@
 
 class ADS1256 {
  public:
-  ADS1256(float clockspdMhz, float vref, bool useresetpin);
+  ADS1256(float clockspdMhz, float vref, byte cs, byte drdy);
   void writeRegister(unsigned char reg, unsigned char wdata);
   unsigned char readRegister(unsigned char reg);
   void sendCommand(unsigned char cmd);
   float readCurrentChannel();
-  float readCurrentChannelRaw();
+  unsigned long readCurrentChannelRaw();
   void setConversionFactor(float val);
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);
@@ -161,6 +161,8 @@ class ADS1256 {
   byte _pga;
   float _VREF;
   float _conversionFactor;
+  byte _CS;
+  byte _DRDY;
 };
 
 #endif
