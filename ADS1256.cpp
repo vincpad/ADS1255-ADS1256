@@ -239,6 +239,7 @@ void ADS1256::CSOFF() {
 
 void ADS1256::waitDRDY() {
   while (digitalRead(_DRDY))
+    delayMicroseconds(150)
     ;
 }
 
