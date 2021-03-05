@@ -206,7 +206,9 @@ void ADS1256::setChannel(byte AIN_P, byte AIN_N) {
   CSON();
   writeRegister(MUX, MUX_CHANNEL);
   sendCommand(SYNC);
-  sendCommand(_WAKEUP);
+  CSON();
+  SPI.transfer(_WAKEUP);
+  delayMicroseconds(1);
   CSOFF();
 }
 
@@ -239,8 +241,7 @@ void ADS1256::CSOFF() {
 
 void ADS1256::waitDRDY() {
   while (digitalRead(_DRDY))
-    delayMicroseconds(150)
-    ;
+    delayMicroseconds(150);
 }
 
 boolean ADS1256::isDRDY() {
