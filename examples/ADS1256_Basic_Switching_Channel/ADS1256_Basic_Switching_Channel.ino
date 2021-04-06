@@ -34,8 +34,10 @@ void setup()
     adc.waitDRDY();
     adc.setChannel(i);
     Serial.print("Current Channel: ");
+
     Serial.print(i);
     Serial.print(" ADC Value: ");
+
     Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
     //Should it be? adc.readCurrentChannel()
   }
@@ -58,6 +60,7 @@ void setup()
     Serial.print(" and ");  
     Serial.print((i+1));
     Serial.print(" ADC Value: ");      
+
     Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
     //Should it be? adc.readCurrentChannel()
   }
