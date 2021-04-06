@@ -30,6 +30,33 @@ Tested with arduino UNO and MEGA
 | * CS      | pin 10            |
 | * POWN    | 5V                |
 
+
+| ADS Board | NodeMCU v2        |
+|-----------|-------------------|
+| * 5V      | 5V  (vin)         |
+| * GND     | GND               |
+| * SCLK    | pin D5 (HSCK)     |
+| * DIN     | pin D7 (HMOSI)    |
+| * DOUT    | pin D6 (HMISO)    |
+| * DRDY    | pin D0            |
+| * CS      | pin D8 (HCS)      |
+| * POWN    | 5V or 3V3         |
+
+| ADS Board | ESP32 WROOM        |
+|-----------|-------------------|
+| * 5V      | 5V  (vin)         |
+| * GND     | GND               |
+| * SCLK    | pin D (HSCK)     |
+| * DIN     | pin D (HMOSI)    |
+| * DOUT    | pin D (HMISO)    |
+| * DRDY    | pin D            |
+| * CS      | pin D (HCS)      |
+| * POWN    | 5V or 3V3         |
+
+Programming ESP32 dev board: 
+I recomend using terminal and execute command instead programming with IDE as sometimes the COM programming fails and the IDE takes long to compile and try to upload again, to enter bootload in dev boar press the boot/flash and "EN", release "EN" and then boot/flash. 
+https://github.com/espressif/esptool/wiki/ESP32-Boot-Mode-Selection
+
 # Examples
 
 Please refer to the examples and function list below

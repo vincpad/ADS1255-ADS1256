@@ -24,6 +24,10 @@
 	#define PINDEX_RESET PB0
 	#define DDR_RESET DDRB
 
+    #define pinDRDY 9
+    #define pinRST  8
+    #define pinCS   10 
+    
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	// Define PORT
 	#define PORT_DRDY PORTL // Pin 49 on Arduino Mega
@@ -40,43 +44,56 @@
 	#define PIN_REST PINL
 	#define PINDEX_RESET PL1
 	#define DDR_RESET DDRL
+
+    #define pinDRDY 49
+    #define pinRST  48
+    #define pinCS   53 
 	
-	// Contributions are welcome
+ // Contributions are welcome   
+#elif   defined(ARDUINO_ARCH_ESP8266)
+//https://esp8266-shop.com/esp8266-guide/esp8266-nodemcu-pinout/
+    #define pinDRDY D0
+    #define pinRST  D1
+    #define pinCS   D8 // D8 Hw Cs in esp8266
+
 #elif   defined(ARDUINO_ARCH_ESP32)
-	#error "Oops! ESP32 architecture not supported yet"	
 	// Contributions are welcome
+    //https://circuits4you.com/wp-content/uploads/2018/12/ESP32-Pinout.jpg
+    #define pinDRDY 4
+    #define pinRST  16
+    #define pinCS   2 //  
 #else 
 	// Contributions are welcome
 	#error "Oops! Your board architecture is not supported yet'"
 #endif
-// ADS1256 Register
-#define STATUS 0x00
-#define MUX 0x01
-#define ADCON 0x02
-#define DRATE 0x03
-#define IO 0x04
-#define OFC0 0x05
-#define OFC1 0x06
-#define OFC2 0x07
-#define FSC0 0x08
-#define FSC1 0x09
-#define FSC2 0x0A
+// ADS1256 Register address
+#define ADS1256_RADD_STATUS 0x00
+#define ADS1256_RADD_MUX 0x01
+#define ADS1256_RADD_ADCON 0x02
+#define ADS1256_RADD_DRATE 0x03
+#define ADS1256_RADD_IO 0x04
+#define ADS1256_RADD_OFC0 0x05
+#define ADS1256_RADD_OFC1 0x06
+#define ADS1256_RADD_OFC2 0x07
+#define ADS1256_RADD_FSC0 0x08
+#define ADS1256_RADD_FSC1 0x09
+#define ADS1256_RADD_FSC2 0x0A
 
 // ADS1256 Command
-#define WAKEUP 0x00
-#define RDATA 0x01
-#define RDATAC 0x03
-#define SDATAC 0x0f
-#define RREG 0x10
-#define WREG 0x50
-#define SELFCAL 0xF0
-#define SELFOCAL 0xF1
-#define SELFGCAL 0xF2
-#define SYSOCAL 0xF3
-#define SYSGCAL 0xF4
-#define SYNC 0xFC
-#define STANDBY 0xFD
-#define RESET 0xFE
+#define ADS1256_CMD_WAKEUP 0x00
+#define ADS1256_CMD_RDATA 0x01
+#define ADS1256_CMD_RDATAC 0x03
+#define ADS1256_CMD_SDATAC 0x0f
+#define ADS1256_CMD_RREG 0x10
+#define ADS1256_CMD_WREG 0x50
+#define ADS1256_CMD_SELFCAL 0xF0
+#define ADS1256_CMD_SELFOCAL 0xF1
+#define ADS1256_CMD_SELFGCAL 0xF2
+#define ADS1256_CMD_SYSOCAL 0xF3
+#define ADS1256_CMD_SYSGCAL 0xF4
+#define ADS1256_CMD_SYNC 0xFC
+#define ADS1256_CMD_STANDBY 0xFD
+#define ADS1256_CMD_RESET 0xFE
 
 // define multiplexer codes
 #define ADS1256_MUXP_AIN0 0x00
@@ -147,6 +164,7 @@ class ADS1256 {
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);
   void begin(unsigned char drate, unsigned char gain, bool bufferenable);
+  uint8_t begin();
   void waitDRDY();
   boolean isDRDY();
   void setGain(uint8_t gain);
