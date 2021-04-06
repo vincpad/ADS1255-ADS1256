@@ -27,13 +27,17 @@ void setup()
     AINCOM are automatically set as the negative input channel.
 */
 
-  Serial.println("Changing channel for single ended mode.");
+  Serial.println("Single ended mode.");
 
   for (int i = 0; i < 8; ++i)
   {
     adc.waitDRDY();
     adc.setChannel(i);
     Serial.print("Current Channel: ");
+
+    Serial.print(i);
+    Serial.print(" ADC Value: ");
+
     Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
     //Should it be? adc.readCurrentChannel()
   }
@@ -45,13 +49,18 @@ void setup()
       n is the number of negative input channel between 0 and 7 (AIN0 to AIN7).
 */
 
-  Serial.println("Changing channel for differential mode.");
+  Serial.println("Changing to differential mode.");
 
   for (int i = 0; i < 8; i+=2)
   {
     adc.waitDRDY();
     adc.setChannel(i,i+1);
     Serial.print("Current Channel: ");
+    Serial.print(i);
+    Serial.print(" and ");  
+    Serial.print((i+1));
+    Serial.print(" ADC Value: ");      
+
     Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
     //Should it be? adc.readCurrentChannel()
   }
