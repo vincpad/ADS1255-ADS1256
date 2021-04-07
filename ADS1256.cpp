@@ -35,9 +35,9 @@ ADS1256::ADS1256(float clockspdMhz, float vref, bool useResetPin) {
 
 void ADS1256::writeRegister(unsigned char reg, unsigned char wdata) {
   CSON();
-  SPI.transfer(ADS1256_CMD_WREG | reg);
-  SPI.transfer(0);
-  SPI.transfer(wdata);
+  SPI.transfer(ADS1256_CMD_WREG | reg); // opcode1 Write registers starting from reg
+  SPI.transfer(0);  // opcode2 Write 1+0 registers
+  SPI.transfer(wdata);  // write wdata
   delayMicroseconds(1);              
   CSOFF();
 }
@@ -46,11 +46,11 @@ unsigned char ADS1256::readRegister(unsigned char reg) {
   unsigned char readValue;
 
   CSON();
-  SPI.transfer(ADS1256_CMD_RREG | reg);
-  SPI.transfer(0);
+  SPI.transfer(ADS1256_CMD_RREG | reg); // opcode1 read registers starting from reg
+  SPI.transfer(0);                  // opcode2 read 1+0 registers
   delayMicroseconds(7);              //  t6 delay (4*tCLKIN 50*0.13 = 6.5 us)    
 
-  readValue = SPI.transfer(0);
+  readValue = SPI.transfer(0);          // read registers
   delayMicroseconds(1);              //  t11 delay (4*tCLKIN 4*0.13 = 0.52 us)    
 
   CSOFF();
