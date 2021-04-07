@@ -10,7 +10,7 @@
 #include <ADS1256.h>
 #include <SPI.h>
 
-// Initialize ADS1256 object
+// Construct and init ADS1256 object
 ADS1256 adc(7.68, 2.5, true ); // clockSpeed in Mhz,  VREF in volt, if use RESET PIN 
 
 void setup()

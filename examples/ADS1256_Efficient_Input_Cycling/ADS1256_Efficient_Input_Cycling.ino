@@ -21,10 +21,9 @@
 
 float clockMHZ = 7.68; // crystal frequency used on ADS1256
 float vRef = 2.5; // voltage reference
-// Initialize ADS1256 object
+
+// Construct and init ADS1256 object
 ADS1256 adc(clockMHZ,vRef,false); // RESETPIN is permanently tied to 3.3v
-
-
 
 float sensor1, sensor2, sensor3, sensor4;
 

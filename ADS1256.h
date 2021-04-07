@@ -8,42 +8,12 @@
 #define ADS1256_h
 
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
-	// Define PORT
-	#define PORT_DRDY PORTB // Pin 9 on Arduino UNO
-	#define PIN_DRDY PINB
-	#define PINDEX_DRDY PB1
-	#define DDR_DRDY DDRB
-
-	#define PORT_CS PORTB // Pin 10 on Arduino UNO
-	#define PIN_CS PINB
-	#define PINDEX_CS PB2
-	#define DDR_CS DDRB
-
-	#define PORT_RESET PORTB // PIN 8 on Arduino UNO
-	#define PIN_REST PINB
-	#define PINDEX_RESET PB0
-	#define DDR_RESET DDRB
 
     #define pinDRDY 9
     #define pinRST  8
     #define pinCS   10 
     
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-	// Define PORT
-	#define PORT_DRDY PORTL // Pin 49 on Arduino Mega
-	#define PIN_DRDY PINL
-	#define PINDEX_DRDY PL0
-	#define DDR_DRDY DDRL
-
-	#define PORT_CS PORTB // Pin 53 on Arduino Mega
-	#define PIN_CS PINB
-	#define PINDEX_CS PB0
-	#define DDR_CS DDRB
-
-	#define PORT_RESET PORTL // PIN 48 on Arduino Mega
-	#define PIN_REST PINL
-	#define PINDEX_RESET PL1
-	#define DDR_RESET DDRL
 
     #define pinDRDY 49
     #define pinRST  48
