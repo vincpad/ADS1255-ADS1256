@@ -63,6 +63,7 @@
 #define FSC2 0x0A
 
 // ADS1256 Command
+#define	NOP	0xFF	//No operation
 #define _WAKEUP 0x00
 #define RDATA 0x01
 #define RDATAC 0x03

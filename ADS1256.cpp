@@ -72,6 +72,7 @@ void ADS1256::readTest() {
 }
 
 float ADS1256::readCurrentChannel() {
+  /*
   unsigned char _highByte, _midByte, _lowByte;
   unsigned long value;
   float adsCode;
@@ -84,22 +85,69 @@ float ADS1256::readCurrentChannel() {
   CSOFF();
   value = ((long)_highByte << 16) + ((long)_midByte << 8) + ((long)_lowByte);
   adsCode = (float) value;
+
+  return adsCode;
+  */
+  //return ((adsCode / 0x7FFFFF) * ((2 * _VREF) / (float)_pga)) * _conversionFactor;
+
+
+  /*
+  int32_t regData;
+
+  CSON();
+  SPI.transfer(RDATA);
+  delayMicroseconds(10);
+	regData |= SPI.transfer(NOP);
+	//delayMicroseconds(10);
+	regData <<= 8;
+	regData |= SPI.transfer(NOP);
+	//delayMicroseconds(10);
+	regData <<= 8;
+	regData |= SPI.transfer(NOP);
+	delayMicroseconds(10);
+  CSOFF();
+
+  return regData;
+  */
+
+  /*
+  adsCode = (float) regData;
   return ((adsCode / 0x7FFFFF) * ((2 * _VREF) / (float)_pga)) *
          _conversionFactor;
-}
+  */
 
-unsigned long ADS1256::readCurrentChannelRaw() {
-  unsigned char _highByte, _midByte, _lowByte;
-  unsigned long value;
+
+  float adsCode;
+
   CSON();
   SPI.transfer(RDATA);
   delayMicroseconds(25);
-  _highByte = SPI.transfer(_WAKEUP);
-  _midByte = SPI.transfer(_WAKEUP);
-  _lowByte = SPI.transfer(_WAKEUP);
+  adsCode = read_float32();
   CSOFF();
-  value = ((long)_highByte << 16) + ((long)_midByte << 8) + ((long)_lowByte);
-  return value;
+
+  //return adsCode;
+  return ((adsCode / 0x7FFFFF) * ((2 * _VREF) / (float)_pga)) * _conversionFactor;
+
+}
+
+
+unsigned long ADS1256::readCurrentChannelRaw() {
+  int32_t regData;
+
+  CSON();
+  SPI.transfer(RDATA);
+  delayMicroseconds(10);
+	regData |= SPI.transfer(NOP);
+	//delayMicroseconds(10);
+	regData <<= 8;
+	regData |= SPI.transfer(NOP);
+	//delayMicroseconds(10);
+	regData <<= 8;
+	regData |= SPI.transfer(NOP);
+	delayMicroseconds(10);
+  CSOFF();
+
+  return regData;
 }
 
 // Call this ONLY after RDATA command
@@ -206,23 +254,30 @@ void ADS1256::setChannel(byte AIN_P, byte AIN_N) {
   CSON();
   writeRegister(MUX, MUX_CHANNEL);
   sendCommand(SYNC);
-  sendCommand(_WAKEUP);
+  CSON();
+  SPI.transfer(_WAKEUP);
+  delayMicroseconds(1);
   CSOFF();
 }
 
 void ADS1256::begin(unsigned char drate, unsigned char gain, bool buffenable) {
   _pga = 1 << gain;
-  sendCommand(
-      SDATAC);  // send out SDATAC command to stop continous reading mode.
-  writeRegister(DRATE, drate);  // write data rate register
+  sendCommand(RESET);
+  waitDRDY();
+  sendCommand(SDATAC);  // send out SDATAC command to stop continous reading mode.
+  waitDRDY();
   uint8_t bytemask = B00000111;
   uint8_t adcon = readRegister(ADCON);
   uint8_t byte2send = (adcon & ~bytemask) | gain;
   writeRegister(ADCON, byte2send);
+  waitDRDY();
+  writeRegister(DRATE, drate);  // write data rate register
+  waitDRDY();
   if (buffenable) {
     uint8_t status = readRegister(_STATUS);
     bitSet(status, 1);
     writeRegister(_STATUS, status);
+    waitDRDY();
   }
   sendCommand(SELFCAL);  // perform self calibration
   waitDRDY();
@@ -239,9 +294,9 @@ void ADS1256::CSOFF() {
 
 void ADS1256::waitDRDY() {
   while (digitalRead(_DRDY))
-    ;
+    delayMicroseconds(150);
 }
 
 boolean ADS1256::isDRDY() {
   return ~(digitalRead(_DRDY));
-}	
+}
