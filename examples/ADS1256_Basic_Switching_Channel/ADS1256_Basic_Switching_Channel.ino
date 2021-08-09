@@ -7,7 +7,8 @@
 // Written by Adien Akhmad, August 2015
 // Modfified  Jan 2019 by Axel Sepulveda for ATMEGA328
 
-#include <ADS1256.h>
+//#include <ADS1256.h>
+#include "ADS1256.h" // Use relative path 
 #include <SPI.h>
 
 // Construct and init ADS1256 object
@@ -36,10 +37,11 @@ void setup()
     Serial.print("Current Channel: ");
 
     Serial.print(i);
+    Serial.print(" MUX: ");
+    Serial.print(adc.readRegister(ADS1256_RADD_MUX),BIN); // Read the Input Multiplexer Control Register to see the current active channels
     Serial.print(" ADC Value: ");
-
-    Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
-    //Should it be? adc.readCurrentChannel()
+    Serial.print(adc.readCurrentChannelRaw());
+    Serial.println();
   }
 
 /*  Differential Mode
@@ -59,17 +61,19 @@ void setup()
     Serial.print(i);
     Serial.print(" and ");  
     Serial.print((i+1));
+    Serial.print(" MUX: ");
+    Serial.print(adc.readRegister(ADS1256_RADD_MUX),BIN); // Read the Input Multiplexer Control Register to see the current active channels    
     Serial.print(" ADC Value: ");      
+    Serial.print(adc.readCurrentChannelRaw());
+    Serial.println();
 
-    Serial.println(adc.readRegister(ADS1256_RADD_MUX),HEX); // Read the multiplex register to see the current active channel
-    //Should it be? adc.readCurrentChannel()
   }
 
   // Please note that AINCOM is defined as channel number 8
   // When you read the serial output,
-  // 08h means AIN0 - AINCOM
-  // 18h means AIN1 - AINCOM
-  // 28h means AIN2 - AINCOM
+  // b 0000 1xxx   means AIN0 - AINCOM
+  // b 0001 1xxx means AIN1 - AINCOM
+  // b 0010 1xxx means AIN2 - AINCOM
   // etc
 
 }
