@@ -2,6 +2,7 @@
 // Written by Axel Sepulveda, May 2020
 
 #include <ADS1256.h>
+//#include "ADS1256.h" // Use relative path 
 #include <SPI.h>
 
 float clockMHZ = 7.68; // crystal frequency used on ADS1256
@@ -22,9 +23,7 @@ void setup()
   adc.begin(); 
   ADCstatus= adc.getStatus();
   Serial.print("ADC Started: ");
-  delay(1000);
-  
-  Serial.println(ADCstatus,BIN);   // print in binary format
+  Serial.println(ADCstatus,BIN);   // print in binary format, ADS1256 should print "110000"
 }
 
 void loop()
