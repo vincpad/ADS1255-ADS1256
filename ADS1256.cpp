@@ -10,25 +10,30 @@
 
 ADS1256::ADS1256(float clockspdMhz, float vref, byte cs, byte drdy) {
   // Set DRDY as input
-  pinMode(pinDRDY, INPUT);
+  _DRDY = drdy;
+  _CS = cs ;
+  pinMode(_DRDY, INPUT);
   // Set CS as output
-  pinMode(pinCS, OUTPUT);
-
-  if (useResetPin) {
-    // set RESETPIN as output
-    pinMode(pinRST, OUTPUT );
-    // pull RESETPIN high
-    pinMode(pinRST, HIGH);
-  }
-
+  pinMode(_CS, OUTPUT);
   // Voltage Reference
   _VREF = vref;
-
   // Default conversion factor and reset pin
   _conversionFactor = 1.0;
-
-
 }
+
+ADS1256::ADS1256(byte cs, byte drdy) {
+  // Set DRDY as input
+  _DRDY = drdy;
+  _CS = cs ;
+  pinMode(_DRDY, INPUT);
+  // Set CS as output
+  pinMode(_CS, OUTPUT);
+  // Voltage Reference
+  _VREF = 2.5;
+  // Default conversion factor and reset pin
+  _conversionFactor = 1.0;
+}
+
 
 void ADS1256::writeRegister(unsigned char reg, unsigned char wdata) {
   CSON();
@@ -304,20 +309,19 @@ uint8_t ADS1256::getStatus() {
 
 void ADS1256::CSON() {
   //PORT_CS &= ~(1 << PINDEX_CS);
-  digitalWrite(pinCS, LOW);
+  digitalWrite(_CS, LOW);
 }  // digitalWrite(_CS, LOW); }
 
 void ADS1256::CSOFF() {
-  digitalWrite(pinCS, HIGH);
+  digitalWrite(_CS, HIGH);
   //PORT_CS |= (1 << PINDEX_CS);
 }  // digitalWrite(_CS, HIGH); }
 
 void ADS1256::waitDRDY() {
-  //while (PIN_DRDY & (1 << PINDEX_DRDY));
-  while (digitalRead(pinDRDY))
+  while (digitalRead(_DRDY))
       delayMicroseconds(150);;
 }
 
 boolean ADS1256::isDRDY() {
-  return !digitalRead(pinDRDY);
+  return !digitalRead(_DRDY);
 }
