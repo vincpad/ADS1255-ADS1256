@@ -125,7 +125,10 @@
 
 class ADS1256 {
  public:
+  ADS1256();
+  ADS1256(byte cs, byte drdy);
   ADS1256(float clockspdMhz, float vref, byte cs, byte drdy);
+  
   void writeRegister(unsigned char reg, unsigned char wdata);
   unsigned char readRegister(unsigned char reg);
   void sendCommand(unsigned char cmd);
