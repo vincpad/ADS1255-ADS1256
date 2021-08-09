@@ -8,18 +8,38 @@
 #include "Arduino.h"
 #include "SPI.h"
 
-ADS1256::ADS1256(float clockspdMhz, float vref, bool useResetPin) {
+
+ADS1256::ADS1256() {
+
+  _DRDY = PIN_DRDY ; 
+  _CS = PIN_CS  ;
   // Set DRDY as input
-  pinMode(pinDRDY, INPUT);      
+  pinMode(_DRDY, INPUT);      
   // Set CS as output
-  pinMode(pinCS, OUTPUT);
+  pinMode(_CS, OUTPUT);
   
-  if (useResetPin) {
-    // set RESETPIN as output
-    pinMode(pinRST, OUTPUT );
-    // pull RESETPIN high
-    pinMode(pinRST, HIGH);
-  }
+  // Default Voltage Reference
+  _VREF = 2.5;
+
+  // Default conversion factor
+  _conversionFactor = 1.0;
+
+  // Start SPI with default params
+  SPI.begin();
+}
+
+
+ADS1256::ADS1256(float clockspdMhz, float vref, byte rstpin) {
+  // Set DRDY as input
+  pinMode(_DRDY, INPUT);      
+  // Set CS as output
+  pinMode(_CS, OUTPUT);
+  
+  // set RESETPIN as output
+  pinMode(rstpin, OUTPUT );
+  // pull RESETPIN high
+  pinMode(rstpin, HIGH);
+
 
   // Voltage Reference
   _VREF = vref;
@@ -89,13 +109,13 @@ float ADS1256::readCurrentChannel() {
 }
 
 // Reads raw ADC data, as 32bit int
-long ADS1256::readCurrentChannelRaw() {
+unsigned long ADS1256::readCurrentChannelRaw() {
   CSON();
   SPI.transfer(ADS1256_CMD_RDATA);
   delayMicroseconds(7);              //  t6 delay (4*tCLKIN 50*0.13 = 6.5 us)       
-  long adsCode = read_int32();
+  unsigned long value = read_uint24();
   CSOFF();
-  return adsCode;
+  return value;
 }
 
 // Call this ONLY after ADS1256_CMD_RDATA command
@@ -253,19 +273,19 @@ uint8_t ADS1256::getStatus() {
 
 void ADS1256::CSON() {
   //PORT_CS &= ~(1 << PINDEX_CS);
-  digitalWrite(pinCS, LOW);
+  digitalWrite(_CS, LOW);
 }  // digitalWrite(_CS, LOW); }
 
 void ADS1256::CSOFF() {
-  digitalWrite(pinCS, HIGH);
+  digitalWrite(_CS, HIGH);
   //PORT_CS |= (1 << PINDEX_CS);
 }  // digitalWrite(_CS, HIGH); }
 
 void ADS1256::waitDRDY() {
   //while (PIN_DRDY & (1 << PINDEX_DRDY));
-  while (digitalRead(pinDRDY));
+  while (digitalRead(_DRDY));
 }
 
 boolean ADS1256::isDRDY() {
-  return !digitalRead(pinDRDY);
+  return !digitalRead(_DRDY);
 }	

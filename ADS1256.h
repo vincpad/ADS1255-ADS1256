@@ -9,32 +9,32 @@
 
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
 
-    #define pinDRDY 9
-    #define pinRST  8
-    #define pinCS   10 
+    #define PIN_DRDY 9
+    #define PIN_RST  8
+    #define PIN_CS   10 
     
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
-    #define pinDRDY 49
-    #define pinRST  48
-    #define pinCS   53 
+    #define PIN_DRDY 49
+    #define PIN_RST  48
+    #define PIN_CS   53 
 	
  // Contributions are welcome   
 #elif   defined(ARDUINO_ARCH_ESP8266)
 //https://esp8266-shop.com/esp8266-guide/esp8266-nodemcu-pinout/
-    #define pinDRDY D0
-    #define pinRST  D1
-    #define pinCS   D8 // D8 Hw Cs in esp8266
+    #define PIN_DRDY D0
+    #define PIN_RST  D1
+    #define PIN_CS   D8 // D8 Hw Cs in esp8266
 
 #elif   defined(ARDUINO_ARCH_ESP32)
 	// Contributions are welcome
     //https://circuits4you.com/wp-content/uploads/2018/12/ESP32-Pinout.jpg
-    #define pinDRDY 17
-    #define pinRST  16
-    #define pinCS   5 //  
+    #define PIN_DRDY 17
+    #define PIN_RST  16
+    #define PIN_CS   5 //  
 #else 
 	// Contributions are welcome
-	#warning  "Oops! Pins for your board are not defined: pinDRDY, pinRST, pinCS"
+	#warning  "Oops! Pins for your board are not defined: PIN_DRDY, PIN_RST, PIN_CS"
 #endif
 
 // ADS1256 Register address
@@ -125,17 +125,19 @@
 
 class ADS1256 {
  public:
-  ADS1256(float clockspdMhz, float vref, bool useresetpin);
+  ADS1256();
+  ADS1256(byte cs, byte drdy);
+  ADS1256(float clockspdMhz, float vref, byte useresetpin);
   void writeRegister(unsigned char reg, unsigned char wdata);
   unsigned char readRegister(unsigned char reg);
   void sendCommand(unsigned char cmd);
   float readCurrentChannel();
-  long readCurrentChannelRaw();
+  unsigned long readCurrentChannelRaw();
   void setConversionFactor(float val);
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);
-  void begin(unsigned char drate, unsigned char gain, bool bufferenable);
   void begin();
+  void begin(unsigned char drate, unsigned char gain, bool bufferenable);  
   uint8_t getStatus();  
   void waitDRDY();
   boolean isDRDY();
@@ -151,6 +153,9 @@ class ADS1256 {
   byte _pga;
   float _VREF;
   float _conversionFactor;
+  byte _CS;
+  byte _DRDY;
+  
 };
 
 #endif
