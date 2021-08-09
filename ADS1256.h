@@ -11,15 +11,15 @@
 
     #define pinDRDY 9
     #define pinRST  8
-    #define pinCS   10 
-    
+    #define pinCS   10
+
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
     #define pinDRDY 49
     #define pinRST  48
-    #define pinCS   53 
-	
- // Contributions are welcome   
+    #define pinCS   53
+
+ // Contributions are welcome
 #elif   defined(ARDUINO_ARCH_ESP8266)
 //https://esp8266-shop.com/esp8266-guide/esp8266-nodemcu-pinout/
     #define pinDRDY D0
@@ -31,8 +31,8 @@
     //https://circuits4you.com/wp-content/uploads/2018/12/ESP32-Pinout.jpg
     #define pinDRDY 17
     #define pinRST  16
-    #define pinCS   5 //  
-#else 
+    #define pinCS   5 //
+#else
 	// Contributions are welcome
 	#warning  "Oops! Pins for your board are not defined: pinDRDY, pinRST, pinCS"
 #endif
@@ -125,18 +125,18 @@
 
 class ADS1256 {
  public:
-  ADS1256(float clockspdMhz, float vref, bool useresetpin);
+  ADS1256(float clockspdMhz, float vref, byte cs, byte drdy);
   void writeRegister(unsigned char reg, unsigned char wdata);
   unsigned char readRegister(unsigned char reg);
   void sendCommand(unsigned char cmd);
   float readCurrentChannel();
-  long readCurrentChannelRaw();
+  unsigned long readCurrentChannelRaw();
   void setConversionFactor(float val);
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);
   void begin(unsigned char drate, unsigned char gain, bool bufferenable);
   void begin();
-  uint8_t getStatus();  
+  uint8_t getStatus();
   void waitDRDY();
   boolean isDRDY();
   void setGain(uint8_t gain);
@@ -151,6 +151,8 @@ class ADS1256 {
   byte _pga;
   float _VREF;
   float _conversionFactor;
+  byte _CS;
+  byte _DRDY;
 };
 
 #endif
