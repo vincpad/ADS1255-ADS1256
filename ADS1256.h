@@ -29,9 +29,9 @@
 #elif   defined(ARDUINO_ARCH_ESP32)
 	// Contributions are welcome
     //https://circuits4you.com/wp-content/uploads/2018/12/ESP32-Pinout.jpg
-    #define pinDRDY 4
+    #define pinDRDY 17
     #define pinRST  16
-    #define pinCS   2 //  
+    #define pinCS   5 //  
 #else 
 	// Contributions are welcome
 	#warning  "Oops! Pins for your board are not defined: pinDRDY, pinRST, pinCS"
@@ -130,7 +130,7 @@ class ADS1256 {
   unsigned char readRegister(unsigned char reg);
   void sendCommand(unsigned char cmd);
   float readCurrentChannel();
-  float readCurrentChannelRaw();
+  long readCurrentChannelRaw();
   void setConversionFactor(float val);
   void setChannel(byte channel);
   void setChannel(byte AIP, byte AIN);
