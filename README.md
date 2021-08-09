@@ -1,22 +1,74 @@
-# ADS1256
-Arduino Library for Texas Instrument ADS1256, working with Arduino IDE 1.8.5, Arduino UNO 
+<h1 align="center">
+  <br>
+  <a href=#><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" width="200px" alt="banner"></a>
+</h1>
+
+<h4 align="center"> ADS1255/1256 Arduino Library
+
+<p align="center">
+     <!-- Badges Here -->
+</p>
+      
+<p align="center">
+  <a href="#about">About</a> •
+  <a href="#installation">Installation</a> •  
+  <a href="#usage">Usage</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#support">Support</a> •
+  <a href="#license">License</a>
+</p>
+
+---
+
+## About
+
+Arduino Library for Texas Instrument ADS1256, working with Arduino IDE 1.8.5 
 Please read datasheet: 
 http://www.ti.com/lit/ds/symlink/ads1256.pdf
 
-# To Do and wish List
+<table>
+<tr>
+<td>
+
+![Imagen/gif de preview](#)
+<p align="right">
+<sub>(Preview)</sub>
+</p>
+
+</td>
+</tr>
+</table>
+
+
+## To Do and wish List
 - Add ESP8266/32 support
 
-# Branches list
+## Branches list
 - Master: keeps sync and push to https://github.com/adienakhmad/ADS1256
 - New examples: developing new examples code
 - Dev: Development and testing
-- DevESP: Add ESP8266 and ESP32 support
+- DevESP: Add ESP8266 and ESP32 support  
+  
+  
+### Features
 
-# Installation
-As any arduino library (download repo, import library)
+|                            |  theProject        | ◾ Other           |
+| -------------------------- | :----------------: | :---------------: |
+| Feature 1                  |         ✔️         |        ❌        |
+| Feature 2                  |         ✔️         |        ❌        |
 
-# Compatibility 
+
+## Installation
+  
+As any arduino library with Arduino IDE (download repo, import library)
+
+### Compatibility 
 Tested with arduino UNO and MEGA
+  
+
+## Usage
+
 
 # Wiring
 | ADS Board | Arduino UNO Board |
@@ -57,7 +109,7 @@ Programming ESP32 dev board:
 I recomend using terminal and execute command instead programming with IDE as sometimes the COM programming fails and the IDE takes long to compile and try to upload again, to enter bootload in dev boar press the boot/flash and "EN", release "EN" and then boot/flash. 
 https://github.com/espressif/esptool/wiki/ESP32-Boot-Mode-Selection
 
-# Examples
+## Examples
 
 Please refer to the examples and function list below
 
@@ -67,7 +119,18 @@ https://github.com/adienakhmad/ADS1256/tree/master/examples/ADS1256_Basic_Switch
 ADS1256_Efficient_Input_Cycling: Read and print continuously the ADC values, changes the channel to be read in the next cycle and reads the current ADC data. (reads in differential ended mode): 
 https://github.com/adienakhmad/ADS1256/tree/master/examples/ADS1256_Efficient_Input_Cycling
 
-# Basic Functions and methods
+
+
+#### Bug Reports & Feature Requests
+
+Please use the [issue tracker](#) to report any bugs or file feature requests.
+
+
+
+
+## Support
+
+  ## Basic Functions and methods
 
 * ADS1256 adc(clockSpeed in Mhz, VREF in volt, boolean if use RESET PIN ): Class Constructor, specify the clockspeed (depends on your board, the reference voltage of the ADC, and if youare conecting the reset pin. 
 
@@ -84,7 +147,7 @@ https://github.com/adienakhmad/ADS1256/tree/master/examples/ADS1256_Efficient_In
 * adc.readCurrentChannelVolts(): Returns the value of the currently data stored in the MUX register converted to Volts. Returns float
 
 
-## Notice: 
+### Notice: 
 According to datasheet, in order to not to lose the previous and new data, it is stored in MUX register and works indepently of the new ADC data channel, every time you change the channel you have to wait for data ready signal for the new channel data to be available to be read. 
 
 Take this sequence as Example: 
@@ -98,7 +161,7 @@ Take this sequence as Example:
 
 This way code and ADC may work faster, as you can do other stuff while ADC reads
 
-# Advanced functions
+## Advanced functions
 
 If you want to exploit all the features of the chip (http://www.ti.com/lit/ds/symlink/ads1256.pdf) you can use these functions to read/write the registers 
 
@@ -125,8 +188,6 @@ adc.sendCommand(SDATAC): Send SDATAC to stop reading contionus data, so we can s
 
 adc.sendCommand(RDATAC): Send SDATAC to read contionusly data
 
-
-
 * adc.readRegister(reg): Returns value of the register "reg", 
 
 Example: 
@@ -134,22 +195,25 @@ Example:
 adc.readRegister(MUX): Read the current content of the MUX register, be aware if the conversion cycle is not complete this will probably read garbage. 
 
 
-# ADC Calibration 
+## ADC Calibration 
 Refer to the datasheet and advanced functions
+ 
 
-# Dependencies
+## Dependencies
 
 This code uses Arduino SPI library and some direct port manipulation
 
-# Licence, Atribuions and Contributions
-Licence:
+## Credits
 
+### Maintainers
+  
 Github users:
 * adienakhmad
 * chepo92
 
-Contributions are welcomed to https://github.com/adienakhmad/ADS1256
+## Licence, Attributions and Contributions
+Licence:
 
+Contributions are welcomed
 
-## Notice: Working as 5/1/2019
 
