@@ -34,8 +34,9 @@
     #define pinCS   2 //  
 #else 
 	// Contributions are welcome
-	#error "Oops! Your board architecture is not supported yet'"
+	#warning  "Oops! Pins for your board are not defined: pinDRDY, pinRST, pinCS"
 #endif
+
 // ADS1256 Register address
 #define ADS1256_RADD_STATUS 0x00
 #define ADS1256_RADD_MUX 0x01
