@@ -6,13 +6,18 @@
 // Written by Axel Sepulveda, May 2020
 
 #include <ADS1256.h>
+
 #include <SPI.h>
 
-float clockMHZ = 7.68; // crystal frequency used on ADS1256
+//float clockMHZ = 7.68; // crystal frequency used on ADS1256
 float vRef = 2.5; // voltage reference
 
 // Construct and init ADS1256 object
-ADS1256 adc(clockMHZ,vRef,false); // RESETPIN is permanently tied to 3.3v
+//ADS1256 adc(clockMHZ,vRef,false); // RESETPIN is permanently tied to 3.3v
+pinCS = 17 ; 
+pinDRDY = 5; 
+ADS1256 adc(pinCS,pinDRDY);
+
 
 float sensor1;
 
