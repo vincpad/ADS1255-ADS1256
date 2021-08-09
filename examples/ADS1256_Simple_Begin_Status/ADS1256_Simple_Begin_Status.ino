@@ -2,7 +2,6 @@
 // Written by Axel Sepulveda, May 2020
 
 #include <ADS1256.h>
-//#include "ADS1256.h" // Use relative path 
 #include <SPI.h>
 
 float clockMHZ = 7.68; // crystal frequency used on ADS1256
