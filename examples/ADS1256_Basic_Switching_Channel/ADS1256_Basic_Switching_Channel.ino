@@ -7,8 +7,7 @@
 // Written by Adien Akhmad, August 2015
 // Modfified  Jan 2019 by Axel Sepulveda for ATMEGA328
 
-//#include <ADS1256.h>
-#include "ADS1256.h" // Use relative path 
+#include <ADS1256.h>
 #include <SPI.h>
 
 // Construct and init ADS1256 object
