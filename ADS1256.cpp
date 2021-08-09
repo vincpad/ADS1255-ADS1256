@@ -44,18 +44,15 @@ void ADS1256::writeRegister(unsigned char reg, unsigned char wdata) {
 
 unsigned char ADS1256::readRegister(unsigned char reg) {
   unsigned char readValue;
-
   CSON();
   SPI.transfer(ADS1256_CMD_RREG | reg); // opcode1 read registers starting from reg
   SPI.transfer(0);                  // opcode2 read 1+0 registers
   delayMicroseconds(7);              //  t6 delay (4*tCLKIN 50*0.13 = 6.5 us)    
-
   readValue = SPI.transfer(0);          // read registers
   delayMicroseconds(1);              //  t11 delay (4*tCLKIN 4*0.13 = 0.52 us)    
-
   CSOFF();
-
   return readValue;
+  
 }
 
 void ADS1256::sendCommand(unsigned char reg) {
@@ -91,13 +88,14 @@ float ADS1256::readCurrentChannel() {
          _conversionFactor;
 }
 
-float ADS1256::readCurrentChannelRaw() {
+// Reads raw ADC data, as 32bit int
+long ADS1256::readCurrentChannelRaw() {
   CSON();
   SPI.transfer(ADS1256_CMD_RDATA);
   delayMicroseconds(7);              //  t6 delay (4*tCLKIN 50*0.13 = 6.5 us)       
-  float adsCode = read_float32();
+  long adsCode = read_int32();
   CSOFF();
-  return ((adsCode / 0x7FFFFF) * _conversionFactor);
+  return adsCode;
 }
 
 // Call this ONLY after ADS1256_CMD_RDATA command
@@ -105,9 +103,9 @@ unsigned long ADS1256::read_uint24() {
   unsigned char _highByte, _midByte, _lowByte;
   unsigned long value;
 
-  _highByte = SPI.transfer(ADS1256_CMD_WAKEUP);
-  _midByte = SPI.transfer(ADS1256_CMD_WAKEUP);
-  _lowByte = SPI.transfer(ADS1256_CMD_WAKEUP);
+  _highByte = SPI.transfer(0);
+  _midByte  = SPI.transfer(0);
+  _lowByte  = SPI.transfer(0);
 
   // Combine all 3-bytes to 24-bit data using byte shifting.
   value = ((long)_highByte << 16) + ((long)_midByte << 8) + ((long)_lowByte);
@@ -115,10 +113,11 @@ unsigned long ADS1256::read_uint24() {
 }
 
 // Call this ONLY after ADS1256_CMD_RDATA command
+// Convert the signed 24bit stored in an unsigned 32bit to a signed 32bit
 long ADS1256::read_int32() {
   long value = read_uint24();
 
-  if (value & 0x00800000) {
+  if (value & 0x00800000) { // if the 24 bit value is negative reflect it to 32bit
     value |= 0xff000000;
   }
 
@@ -126,6 +125,7 @@ long ADS1256::read_int32() {
 }
 
 // Call this ONLY after ADS1256_CMD_RDATA command
+// Cast as a float
 float ADS1256::read_float32() {
   long value = read_int32();
   return (float)value;
