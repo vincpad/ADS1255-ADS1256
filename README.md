@@ -52,11 +52,11 @@ http://www.ti.com/lit/ds/symlink/ads1256.pdf
   
   
 ### Features
-
+<!--  
 |                            |  theProject        | ◾ Other           |
 | -------------------------- | :----------------: | :---------------: |
 | Feature 1                  |         ✔️         |        ❌        |
-| Feature 2                  |         ✔️         |        ❌        |
+| Feature 2                  |         ✔️         |        ❌        |-->
 
 
 ## Installation
@@ -205,14 +205,18 @@ This code uses Arduino SPI library and some direct port manipulation
 
 ## Credits
 
-### Maintainers
+### Aknowledgement 
+
+
+* [adienakhmad](https://github.com/adienakhmad), original library
+* [chepo92](https://github.com/chepo92)
   
-Github users:
-* adienakhmad
-* chepo92
+### Maintainers
+* [chepo92](https://github.com/chepo92)
+  
 
 ## Licence, Attributions and Contributions
-Licence:
+Licence: MIT
 
 Contributions are welcomed
 
