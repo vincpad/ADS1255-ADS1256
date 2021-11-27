@@ -8,7 +8,12 @@
 #include "Arduino.h"
 #include "SPI.h"
 
-ADS1256::ADS1256(float clockspdMhz, float vref, bool useResetPin) {
+ADS1256::ADS1256(uint8_t _pinDRDY, uint8_t _pinCS, uint8_t _pinRST, float clockspdMhz, float vref, bool useResetPin) {
+  // Save pins
+  pinDRDY = _pinDRDY;
+  pinCS = _pinCS;
+  pinRST = _pinRST;
+
   // Set DRDY as input
   pinMode(pinDRDY, INPUT);      
   // Set CS as output
